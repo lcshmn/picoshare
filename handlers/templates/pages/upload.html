@@ -48,23 +48,24 @@
 
     .logo-img {
       width: auto;
-      /* Restrict to 50% of the container width OR a fixed small height */
-      max-width: 50%; 
-      max-height: 48px; 
+      max-width: 50%;       /* 50% width limit */
+      max-height: 48px;     /* Height limit to match aesthetics */
       object-fit: contain;
     }
 
-    /* --- Upload Card --- */
+    /* --- Upload Card (Visual Revert) --- */
     .file {
       border: none;
       border-radius: var(--radius-lg);
       background: var(--apple-card-bg);
+      /* Reverted padding to outer container for better look */
+      padding: 3rem 2rem; 
       text-align: center;
+      cursor: pointer;
       box-shadow: var(--shadow-md);
       transition: all 0.2s ease;
       position: relative;
       overflow: hidden;
-      padding: 0; /* Padding moved to label */
     }
 
     .file:hover {
@@ -77,16 +78,10 @@
       box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.3);
     }
 
-    /* Make the label cover the whole card so clicking anywhere works */
     .file-label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      padding: 3rem 2rem;
+      display: block;
       cursor: pointer;
+      width: 100%;
     }
 
     .file-input {
@@ -248,11 +243,12 @@
       const percentageValue = bytesTotal === 0 ? 0 : Math.round((bytesUploaded / bytesTotal) * 100);
       progressBarFill.value = percentageValue;
       progressBarFill.setAttribute("aria-valuenow", percentageValue);
-      document.title = "Upload ↑ " + percentageValue + "%";
       
       if (bytesUploaded === bytesTotal && bytesTotal > 0) {
         document.title = "Processing...";
         showElement(progressSpinner);
+      } else {
+        document.title = "Upload " + percentageValue + "%";
       }
     }
 
@@ -271,10 +267,7 @@
       }
 
       hideElement(errorContainer);
-      
-      // Hide form elements nicely
-      uploadForm.style.display = 'none';
-      
+      uploadForm.style.display = 'none'; // Hide form nicely
       showElement(progressBar);
 
       let uploader = () => {
@@ -291,6 +284,9 @@
         .then((res) => {
           const entryId = res.id;
           populateEditButton(entryId);
+          
+          // --- TITLE FIX: Set title to Done! here ---
+          document.title = "Uploaded!";
 
           const uploadLinksEl = document.createElement("upload-links");
           uploadLinksEl.fileId = entryId;
@@ -309,7 +305,8 @@
           console.error(error);
           document.getElementById("error-message").innerText = "Upload failed: " + error;
           showElement(errorContainer);
-          uploadForm.style.display = 'block'; // Show form again
+          document.title = "Error"; // Reset title on error
+          uploadForm.style.display = 'block';
         })
         .finally(() => {
           hideElement(progressBar);
@@ -333,7 +330,6 @@
     });
     
     document.body.addEventListener("dragleave", (evt) => {
-       // Only remove class if leaving the window (coordinates 0,0)
        if (evt.clientX === 0 && evt.clientY === 0 && uploadEl) {
           uploadEl.classList.remove("accepting-drop");
        }
@@ -349,12 +345,11 @@
         if (item.kind === "file") {
           const file = item.getAsFile();
           doUpload(file);
-          return; // Upload first file only
+          return;
         }
       }
     });
 
-    // Expiration Logic
     if (expirationSelect) {
       expirationSelect.addEventListener("change", () => {
         if (isCustomExpirationSelected()) {
@@ -393,7 +388,7 @@
   
   <div id="upload-form">
     
-    <!-- LOGO: Updated to be smaller -->
+    <!-- LOGO (50% size / 48px height) -->
     <div class="logo-container">
         <img src="/logoline.png" class="logo-img" alt="Logo">
     </div>
@@ -406,7 +401,7 @@
           <span class="file-icon">
             <i class="fa-solid fa-cloud-arrow-up"></i>
           </span>
-          <span class="file-label">
+          <span class="file-label-text">
             Drop file here<br>
             <span style="font-size: 0.9rem; font-weight: 400; opacity: 0.7;">or click to browse</span>
           </span>
