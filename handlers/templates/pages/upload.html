@@ -11,7 +11,7 @@
       --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
 
-    /* Versuchen, die Navbar des Parent-Templates auszublenden */
+    /* Hide Navbar/Header from parent template */
     nav, .navbar, header {
       display: none !important;
     }
@@ -25,10 +25,10 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding-top: 0 !important; /* Falls Padding vom Body kommt */
+      padding-top: 0 !important;
     }
 
-    /* Container Zentrierung */
+    /* Container Centering */
     main.container, .container {
       max-width: 600px !important;
       margin: 0 auto;
@@ -36,7 +36,21 @@
     }
 
     h1.h1 {
-      display: none; /* Titel wie gewünscht ausblenden */
+      display: none;
+    }
+
+    /* Logo Styling */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 0 1rem;
+    }
+
+    .logo-img {
+      max-width: 100%;       /* Ensure it fits in container */
+      height: auto;          /* Maintain aspect ratio */
+      max-height: 80px;      /* Restrict height for clean look */
+      object-fit: contain;
     }
 
     /* Upload Card Style */
@@ -59,7 +73,7 @@
     }
 
     .file.accepting-drop {
-      background: #eff6ff; /* Sehr helles Blau */
+      background: #eff6ff;
       box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.3);
     }
 
@@ -144,7 +158,7 @@
     /* Layout Helpers */
     .field-max-width {
       width: 100%;
-      max-width: 100%; /* Full width in card */
+      max-width: 100%; 
     }
 
     .expiration-container, .note-container {
@@ -182,7 +196,7 @@
       border-radius: 999px;
     }
 
-    /* Hide Pastebox */
+    /* Hide Pastebox explicitly */
     #pastebox {
       display: none !important;
     }
@@ -193,11 +207,9 @@
   <script type="module" nonce="{{ .CspNonce }}">
     import { guestUploadFile, uploadFile } from "/js/controllers/files.js";
     import { showElement, hideElement } from "/js/lib/bulma.js";
-    // Clipboard import removed as we removed the pastebox
-
+    
     const uploadEl = document.querySelector(".file");
     const resultEl = document.getElementById("upload-result");
-    // Removed pasteEl reference
     const errorContainer = document.getElementById("error");
     const progressBar = document.getElementById("upload-progress");
     const progressBarFill = document.getElementById("upload-progress-bar");
@@ -211,9 +223,7 @@
 
     function getGuestLinkMetdata() {
       const el = document.getElementById("guest-link-metadata");
-      if (!el) {
-        return null;
-      }
+      if (!el) { return null; }
       return JSON.parse(el.innerHTML);
     }
 
@@ -245,10 +255,9 @@
       const percentage = `${percentageValue}%`;
       progressBarFill.value = percentageValue;
       progressBarFill.setAttribute("aria-valuenow", percentageValue);
-      // Removed text content inside bar for cleaner look
-      document.title = "Upload ↑ " + percentage;
+      document. = "Upload ↑ " + percentage;
       if (bytesUploaded === bytesTotal) {
-        document.title = "Upload - Complete";
+        document. = "Upload - Complete";
         showElement(progressSpinner);
       }
     }
@@ -269,9 +278,10 @@
         return;
       }
       hideElement(errorContainer);
-      // Instead of hiding the whole form, we just hide the input area to keep layout stable
-      uploadEl.style.display = 'none';
-      if (expirationContainer) expirationContainer.style.display = 'none';
+      
+      // Hide the entire form container (includes logo, file input, settings)
+      // to make room for progress and results
+      uploadForm.style.display = 'none';
       
       showElement(progressBar);
 
@@ -305,15 +315,12 @@
           document.getElementById("result-links").append(uploadLinksEl);
           showElement(resultEl);
           showElement(uploadAnotherBtn);
-
-          // Additional cleanup if needed
         })
         .catch((error) => {
           document.getElementById("error-message").innerText = error;
           showElement(errorContainer);
           // Show form again on error
-          uploadEl.style.display = 'block'; 
-          if(expirationContainer) expirationContainer.style.display = 'block';
+          uploadForm.style.display = 'block'; 
         })
         .finally(() => {
           hideElement(progressBar);
@@ -332,7 +339,6 @@
     });
     
     document.body.addEventListener("dragleave", (evt) => {
-       // Only remove if we leave the window or drop zone
        if (evt.clientX === 0 && evt.clientY === 0) {
           uploadEl.classList.remove("accepting-drop");
        }
@@ -352,8 +358,6 @@
         }
       }
     });
-
-    // Removed all Paste Event Listeners
 
     if (expirationSelect) {
       expirationSelect.addEventListener("change", () => {
@@ -387,30 +391,33 @@
 {{ end }}
 
 {{ define "content" }}
-  <!-- H1 Title removed -->
+  <!-- H1  removed -->
 
   <div id="upload-form">
+    
+    <!-- LOGO Added here -->
+    <div class="logo-container">
+        <img src="/logoline.png" class="logo-img" alt="Logo">
+    </div>
+
     <div class="file field-max-width">
       <label class="file-label">
         <input class="file-input" type="file" />
         <span class="file-cta">
           <span class="file-icon">
-            <!-- Cloud Icon statt Simple Upload -->
             <i class="fa-solid fa-cloud-arrow-up"></i>
           </span>
           <span class="file-label">
-            Datei hier ablegen<br>
-            <span style="font-size: 0.9rem; font-weight: 400; opacity: 0.7;">oder klicken zum Auswählen</span>
+            Drop file here<br>
+            <span style="font-size: 0.9rem; font-weight: 400; opacity: 0.7;">or click to browse</span>
           </span>
         </span>
       </label>
     </div>
 
-    <!-- Pastebox removed -->
-
     {{ if gt (len .ExpirationOptions) 0 }}
       <div class="expiration-container field-max-width">
-        <label class="form-label">Gültigkeit</label>
+        <label class="form-label">Expiration</label>
         <select id="expiration-select" class="form-select" autocomplete="off">
           {{ range .ExpirationOptions }}
             <option
@@ -428,15 +435,15 @@
 
     {{ if not .GuestLinkMetadata.ID }}
       <div class="expiration-container field-max-width" style="margin-top: 1rem;">
-        <label class="form-label">Notiz <i>(optional)</i></label>
+        <label class="form-label">Note <i>(optional)</i></label>
         <input
           id="note"
           class="form-control"
           type="text"
-          placeholder="z.B. Für Meeting am Freitag"
+          placeholder="e.g. For Friday's meeting"
           maxlength="{{ .MaxNoteLength }}"
         />
-        <p class="form-text mt-2">Nur für dich sichtbar.</p>
+        <p class="form-text mt-2">Only visible to you.</p>
       </div>
     {{ end }}
   </div>
@@ -458,34 +465,34 @@
     <div style="color: var(--apple-blue);" class="fa-2x">
       <i class="fa-solid fa-circle-notch fa-spin"></i>
     </div>
-    <div class="mt-2" style="font-weight: 500;">Verarbeite...</div>
+    <div class="mt-2" style="font-weight: 500;">Processing...</div>
   </div>
 
   <div id="upload-result" class="d-none">
     <div class="alert alert-primary d-none" role="alert">
-      <!-- Standard Alert ausgeblendet für cleaner look -->
+      <!-- Hidden standard alert -->
     </div>
 
     <div class="mt-4 text-center">
         <i class="fa-solid fa-check-circle" style="color: #34c759; font-size: 3rem; margin-bottom: 1rem;"></i>
-        <h3 style="font-weight: 600; margin-bottom: 1.5rem;">Fertig!</h3>
+        <h3 style="font-weight: 600; margin-bottom: 1.5rem;">Done!</h3>
     </div>
 
     <div id="result-links" class="field-max-width"></div>
 
     <div class="d-flex flex-wrap gap-2 my-4 justify-content-center">
       {{ if not .GuestLinkMetadata.ID }}
-        <a id="edit-btn" class="btn btn-outline-primary">Bearbeiten</a>
+        <a id="edit-btn" class="btn btn-outline-primary">Edit</a>
       {{ end }}
       <button id="upload-another-btn" class="btn btn-primary">
-        Nächste Datei
+        Upload Another
       </button>
     </div>
   </div>
 
   <div id="error" class="d-none my-3">
     <div class="alert alert-danger" role="alert" style="background: #fff2f2; color: #ff3b30; border: 1px solid #ffcfcf; border-radius: 12px; padding: 1rem;">
-      <div id="error-message">Fehler aufgetreten.</div>
+      <div id="error-message">An error occurred.</div>
     </div>
   </div>
 {{ end }}
