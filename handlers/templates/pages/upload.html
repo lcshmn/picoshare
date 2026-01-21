@@ -1,21 +1,66 @@
 {{ define "style-tags" }}
   <style nonce="{{ .CspNonce }}">
+    /* Apple / Modern Reset & Base */
+    :root {
+      --apple-blue: #007AFF;
+      --apple-gray-bg: #F5F5F7;
+      --apple-card-bg: #FFFFFF;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Versuchen, die Navbar des Parent-Templates auszublenden */
+    nav, .navbar, header {
+      display: none !important;
+    }
+
+    body {
+      background-color: var(--apple-gray-bg) !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+      color: #1d1d1f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding-top: 0 !important; /* Falls Padding vom Body kommt */
+    }
+
+    /* Container Zentrierung */
+    main.container, .container {
+      max-width: 600px !important;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1.h1 {
+      display: none; /* Titel wie gewünscht ausblenden */
+    }
+
+    /* Upload Card Style */
     .file {
-      border: 1px dashed #ced4da;
-      border-radius: 0.5rem;
-      background: #f8f9fa;
-      padding: 1.5rem;
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--apple-card-bg);
+      padding: 3rem 2rem;
       text-align: center;
       cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .file:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
     }
 
     .file.accepting-drop {
-      background: #dbf5ff;
-    }
-
-    .file-label {
-      display: block;
-      cursor: pointer;
+      background: #eff6ff; /* Sehr helles Blau */
+      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.3);
     }
 
     .file-input {
@@ -23,51 +68,123 @@
     }
 
     .file-cta {
-      display: inline-flex;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
-      font-weight: 600;
+      gap: 1rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: #86868b;
     }
 
+    /* Icon Styling */
     .file-icon {
-      display: inline-flex;
+      font-size: 3rem;
+      color: var(--apple-blue);
+      margin-bottom: 0.5rem;
     }
 
-    #pastebox {
-      font-size: 0.95em;
-      padding: 1rem;
-      text-align: center;
-      caret-color: transparent;
+    /* Buttons */
+    .btn {
+      border-radius: 999px !important; /* Pill Shape */
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+      border: none;
+      transition: all 0.2s;
     }
 
+    .btn-primary, .btn-success {
+      background-color: var(--apple-blue) !important;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+    }
+
+    .btn-primary:hover, .btn-success:hover {
+      background-color: #0062cc !important;
+      transform: scale(1.02);
+    }
+
+    .btn-outline-primary {
+      color: var(--apple-blue);
+      border: 1px solid var(--apple-blue);
+      background: transparent;
+    }
+
+    .btn-outline-primary:hover {
+      background: var(--apple-blue);
+      color: white;
+    }
+
+    /* Inputs & Selects */
+    .form-control, .form-select {
+      border-radius: var(--radius-md) !important;
+      border: 1px solid #d2d2d7;
+      background-color: #fff;
+      padding: 0.75rem 1rem;
+      box-shadow: none;
+      font-size: 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .form-text {
+      color: #86868b;
+      font-size: 0.85rem;
+    }
+
+    /* Layout Helpers */
     .field-max-width {
-      max-width: 500px;
       width: 100%;
+      max-width: 100%; /* Full width in card */
     }
 
+    .expiration-container, .note-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-top: 1.5rem;
+    }
+
+    /* Progress Bar */
     .upload-progress-bar {
       appearance: none;
       display: block;
       width: 100%;
-      height: 0.75rem;
-      border-radius: var(--bs-border-radius-pill);
-      background-color: var(--bs-gray-200);
+      height: 0.5rem;
+      border-radius: 999px;
+      background-color: #e5e5ea;
       overflow: hidden;
     }
 
     .upload-progress-bar::-webkit-progress-bar {
-      background-color: var(--bs-gray-200);
-      border-radius: var(--bs-border-radius-pill);
+      background-color: #e5e5ea;
+      border-radius: 999px;
     }
 
     .upload-progress-bar::-webkit-progress-value {
-      background-color: var(--bs-primary);
-      border-radius: var(--bs-border-radius-pill);
+      background-color: var(--apple-blue);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    
+    .upload-progress-bar::-moz-progress-bar {
+      background-color: var(--apple-blue);
+      border-radius: 999px;
     }
 
-    .upload-progress-bar::-moz-progress-bar {
-      background-color: var(--bs-primary);
-      border-radius: var(--bs-border-radius-pill);
+    /* Hide Pastebox */
+    #pastebox {
+      display: none !important;
     }
   </style>
 {{ end }}
@@ -76,11 +193,11 @@
   <script type="module" nonce="{{ .CspNonce }}">
     import { guestUploadFile, uploadFile } from "/js/controllers/files.js";
     import { showElement, hideElement } from "/js/lib/bulma.js";
-    import { sortClipboardItems } from "/js/lib/clipboard.js";
+    // Clipboard import removed as we removed the pastebox
 
     const uploadEl = document.querySelector(".file");
     const resultEl = document.getElementById("upload-result");
-    const pasteEl = document.getElementById("pastebox");
+    // Removed pasteEl reference
     const errorContainer = document.getElementById("error");
     const progressBar = document.getElementById("upload-progress");
     const progressBarFill = document.getElementById("upload-progress-bar");
@@ -113,16 +230,12 @@
     }
 
     function readNote() {
-      return noteInput.value || null;
+      return noteInput ? noteInput.value : null;
     }
 
     function populateEditButton(entryId) {
       const btn = document.getElementById("edit-btn");
-      // Button does not appear in guest mode.
-      if (!btn) {
-        return;
-      }
-
+      if (!btn) { return; }
       btn.href = `/files/${entryId}/edit`;
     }
 
@@ -132,10 +245,10 @@
       const percentage = `${percentageValue}%`;
       progressBarFill.value = percentageValue;
       progressBarFill.setAttribute("aria-valuenow", percentageValue);
-      progressBarFill.textContent = percentage;
-      document.title = "PRETTY.NICE ↑ " + percentage;
+      // Removed text content inside bar for cleaner look
+      document.title = "Upload ↑ " + percentage;
       if (bytesUploaded === bytesTotal) {
-        document.title = "PRETTY.NICE - Complete";
+        document.title = "Upload - Complete";
         showElement(progressSpinner);
       }
     }
@@ -156,7 +269,10 @@
         return;
       }
       hideElement(errorContainer);
-      hideElement(uploadForm);
+      // Instead of hiding the whole form, we just hide the input area to keep layout stable
+      uploadEl.style.display = 'none';
+      if (expirationContainer) expirationContainer.style.display = 'none';
+      
       showElement(progressBar);
 
       let uploader = () => {
@@ -190,15 +306,14 @@
           showElement(resultEl);
           showElement(uploadAnotherBtn);
 
-          uploadEl.style.display = "none";
-          if (expirationContainer) {
-            expirationContainer.style.display = "none";
-          }
+          // Additional cleanup if needed
         })
         .catch((error) => {
           document.getElementById("error-message").innerText = error;
           showElement(errorContainer);
-          showElement(uploadForm);
+          // Show form again on error
+          uploadEl.style.display = 'block'; 
+          if(expirationContainer) expirationContainer.style.display = 'block';
         })
         .finally(() => {
           hideElement(progressBar);
@@ -206,22 +321,29 @@
         });
     }
 
-    function resetPasteInstructions() {
-      pasteEl.value = "Or paste something here";
-    }
-
     document.querySelector(".file-input").addEventListener("change", (evt) => {
       doUpload(evt.target.files[0]);
     });
 
-    uploadForm.addEventListener("drop", (evt) => {
+    // Drag and Drop Logic
+    document.body.addEventListener("dragover", (evt) => {
       evt.preventDefault();
+      uploadEl.classList.add("accepting-drop");
+    });
+    
+    document.body.addEventListener("dragleave", (evt) => {
+       // Only remove if we leave the window or drop zone
+       if (evt.clientX === 0 && evt.clientY === 0) {
+          uploadEl.classList.remove("accepting-drop");
+       }
+    });
 
-      uploadForm.classList.remove("accepting-drop");
+    document.body.addEventListener("drop", (evt) => {
+      evt.preventDefault();
+      uploadEl.classList.remove("accepting-drop");
 
-      if (!evt.dataTransfer.items) {
-        return;
-      }
+      if (!evt.dataTransfer.items) { return; }
+      
       for (var i = 0; i < evt.dataTransfer.items.length; i++) {
         if (evt.dataTransfer.items[i].kind === "file") {
           var file = evt.dataTransfer.items[i].getAsFile();
@@ -231,63 +353,7 @@
       }
     });
 
-    uploadEl.addEventListener("dragover", (evt) => {
-      evt.preventDefault();
-
-      uploadEl.classList.add("accepting-drop");
-    });
-
-    uploadEl.addEventListener("dragenter", (evt) => {
-      evt.preventDefault();
-
-      uploadEl.classList.add("accepting-drop");
-    });
-
-    uploadEl.addEventListener("dragleave", () => {
-      uploadEl.classList.remove("accepting-drop");
-    });
-
-    pasteEl.addEventListener("paste", (evt) => {
-      const timestamp = new Date().toISOString().replaceAll(":", "");
-      for (const item of sortClipboardItems(
-        Array.from(evt.clipboardData.items)
-      )) {
-        if (item.kind === "string") {
-          item.getAsString((s) => {
-            doUpload(
-              new File([new Blob([s])], `pasted-${timestamp}.txt`, {
-                type: "text/plain;charset=UTF-8",
-              })
-            );
-          });
-          return;
-        }
-        let pastedFile = item.getAsFile();
-        if (!pastedFile) {
-          continue;
-        }
-
-        // Pasted images are named image.png by default, so make a better filename.
-        if (pastedFile.name === "image.png") {
-          pastedFile = new File([pastedFile], `pasted-${timestamp}.png`, {
-            type: pastedFile.type,
-          });
-        }
-
-        doUpload(pastedFile);
-        return;
-      }
-    });
-
-    pasteEl.addEventListener("change", (evt) => {
-      evt.preventDefault();
-      resetPasteInstructions();
-    });
-
-    pasteEl.addEventListener("input", (evt) => {
-      evt.preventDefault();
-      resetPasteInstructions();
-    });
+    // Removed all Paste Event Listeners
 
     if (expirationSelect) {
       expirationSelect.addEventListener("change", () => {
@@ -303,13 +369,6 @@
       window.location.reload();
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-      resetPasteInstructions();
-      // Set initial focus to paste element so that if the user pastes on page load,
-      // it pastes to the right place without them having to manually place the
-      // cursor in the right place.
-      pasteEl.focus();
-    });
   </script>
   {{ if .GuestLinkMetadata.ID }}
     <script type="application/json" id="guest-link-metadata">
@@ -328,7 +387,7 @@
 {{ end }}
 
 {{ define "content" }}
-  <h1 class="h1">Upload</h1>
+  <!-- H1 Title removed -->
 
   <div id="upload-form">
     <div class="file field-max-width">
@@ -336,21 +395,22 @@
         <input class="file-input" type="file" />
         <span class="file-cta">
           <span class="file-icon">
-            <i class="fa-solid fa-upload"></i>
+            <!-- Cloud Icon statt Simple Upload -->
+            <i class="fa-solid fa-cloud-arrow-up"></i>
           </span>
-          <span class="file-label"> Choose a file… </span>
+          <span class="file-label">
+            Datei hier ablegen<br>
+            <span style="font-size: 0.9rem; font-weight: 400; opacity: 0.7;">oder klicken zum Auswählen</span>
+          </span>
         </span>
       </label>
     </div>
 
-    <textarea
-      id="pastebox"
-      class="form-control mt-4 field-max-width"
-    ></textarea>
+    <!-- Pastebox removed -->
 
     {{ if gt (len .ExpirationOptions) 0 }}
-      <div class="mb-4 mt-5 expiration-container field-max-width">
-        <label class="form-label">Expiration</label>
+      <div class="expiration-container field-max-width">
+        <label class="form-label">Gültigkeit</label>
         <select id="expiration-select" class="form-select" autocomplete="off">
           {{ range .ExpirationOptions }}
             <option
@@ -367,63 +427,65 @@
     {{ end }}
 
     {{ if not .GuestLinkMetadata.ID }}
-      <div class="mb-4 field-max-width">
-        <label class="form-label">Note <i>(optional)</i></label>
+      <div class="expiration-container field-max-width" style="margin-top: 1rem;">
+        <label class="form-label">Notiz <i>(optional)</i></label>
         <input
           id="note"
           class="form-control"
           type="text"
-          placeholder="For Joe at ExampleCo"
+          placeholder="z.B. Für Meeting am Freitag"
           maxlength="{{ .MaxNoteLength }}"
         />
-        <p class="form-text">Note is only visible to you</p>
+        <p class="form-text mt-2">Nur für dich sichtbar.</p>
       </div>
     {{ end }}
   </div>
 
-  <div id="upload-progress" class="d-none mt-3">
+  <div id="upload-progress" class="d-none mt-4">
     <progress
       id="upload-progress-bar"
-      class="upload-progress-bar rounded-pill"
+      class="upload-progress-bar"
       value="0"
       max="100"
       aria-label="Upload progress"
       aria-valuenow="0"
     >
-      0%
     </progress>
+    <div class="text-center mt-2" style="color: #86868b; font-size: 0.9rem;">Uploading...</div>
   </div>
 
-  <div id="progress-spinner" class="d-none">
-    <div class="alert alert-primary" role="alert">
-      File uploaded! Processing...
+  <div id="progress-spinner" class="d-none mt-4 text-center">
+    <div style="color: var(--apple-blue);" class="fa-2x">
+      <i class="fa-solid fa-circle-notch fa-spin"></i>
     </div>
-
-    <div class="fa-3x">
-      <i class="fa-solid fa-spinner fa-spin"></i>
-    </div>
+    <div class="mt-2" style="font-weight: 500;">Verarbeite...</div>
   </div>
 
   <div id="upload-result" class="d-none">
-    <div class="alert alert-primary" role="alert">
-      <div class="message-body">Upload complete!</div>
+    <div class="alert alert-primary d-none" role="alert">
+      <!-- Standard Alert ausgeblendet für cleaner look -->
     </div>
 
-    <div id="result-links"></div>
+    <div class="mt-4 text-center">
+        <i class="fa-solid fa-check-circle" style="color: #34c759; font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h3 style="font-weight: 600; margin-bottom: 1.5rem;">Fertig!</h3>
+    </div>
 
-    <div class="d-flex flex-wrap gap-2 my-4">
+    <div id="result-links" class="field-max-width"></div>
+
+    <div class="d-flex flex-wrap gap-2 my-4 justify-content-center">
       {{ if not .GuestLinkMetadata.ID }}
-        <a id="edit-btn" class="btn btn-outline-primary">Edit</a>
+        <a id="edit-btn" class="btn btn-outline-primary">Bearbeiten</a>
       {{ end }}
-      <button id="upload-another-btn" class="btn btn-success">
-        Upload Another
+      <button id="upload-another-btn" class="btn btn-primary">
+        Nächste Datei
       </button>
     </div>
   </div>
 
   <div id="error" class="d-none my-3">
-    <div class="alert alert-danger" role="alert">
-      <div id="error-message">Placeholder error.</div>
+    <div class="alert alert-danger" role="alert" style="background: #fff2f2; color: #ff3b30; border: 1px solid #ffcfcf; border-radius: 12px; padding: 1rem;">
+      <div id="error-message">Fehler aufgetreten.</div>
     </div>
   </div>
 {{ end }}
