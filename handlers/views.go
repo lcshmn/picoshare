@@ -532,7 +532,7 @@ func (s Server) uploadGet() http.HandlerFunc {
 			MaxNoteLength     int
 			GuestLinkMetadata picoshare.GuestLink
 		}{
-			commonProps:       makeCommonProps("PicoShare - Upload", r.Context()),
+			commonProps:       makeCommonProps("PRETTY.NICE - Upload", r.Context()),
 			MaxNoteLength:     parse.MaxFileNoteBytes,
 			ExpirationOptions: expirationOptions,
 		}); err != nil {
