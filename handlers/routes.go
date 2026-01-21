@@ -37,6 +37,7 @@ func (s *Server) routes() {
 		"/favicon.ico",
 		"/mstile-150x150.png",
 		"/safari-pinned-tab.svg",
+		"/logoline.png",
 		"/site.webmanifest",
 	} {
 		static.Path(f).HandlerFunc(serveStaticResource()).Methods(http.MethodGet)
